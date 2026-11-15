@@ -5,6 +5,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     instrument: ObserveInstrument,
   });
-  await app.listen(process.env.PORT ?? 3001);
+
+  app.enableCors();
+  app.setGlobalPrefix('api'); // endpoint prefix 
+
+  const port = process.env.PORT ?? 3001
+
+  await app.listen(port);
+  console.log(`API Running at port ${port}`)
 }
 void bootstrap();
