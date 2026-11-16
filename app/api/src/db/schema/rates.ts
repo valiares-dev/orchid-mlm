@@ -7,14 +7,14 @@ export const level_rates = pgTable('level_rates', {
   amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 }, (table) => [
-  check('level_check', sql`0 >= ${table.level} AND ${table.level} <= 5`)
+  check('level_check', sql`${table.level} BETWEEN 0 AND 5`)
 ])
 
 // direct rates table
 export const direct_rates = pgTable('direct_rates', {
   from_sale: smallint('from_sale').primaryKey(),
   amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
-  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_at: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
 // types for level rates 
@@ -22,6 +22,6 @@ export type LevelRates = typeof level_rates.$inferSelect;
 export type NewLevelRates = typeof level_rates.$inferInsert;
 
 // types for direct rates 
-export type DirectRates = typeof level_rates.$inferSelect;
-export type NewDirectRates = typeof level_rates.$inferInsert;
+export type DirectRates = typeof direct_rates.$inferSelect;
+export type NewDirectRates = typeof direct_rates.$inferInsert;
 

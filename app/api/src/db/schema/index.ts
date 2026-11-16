@@ -7,3 +7,4 @@ export * from './packages';
 export * from './products';
 export * from './referral_codes';
 export * from './withdrawal';
+export * from './rates';

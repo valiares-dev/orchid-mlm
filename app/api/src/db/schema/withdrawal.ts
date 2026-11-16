@@ -16,7 +16,7 @@ export const withdrawal = pgTable('withdrawal', {
   processed_by: uuid('processed_by').references(() => users.id),
   processed_at: timestamp('processed_at', { withTimezone: true }),
   remarks: text('remarks'),
-  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
 export type Withdrawal = typeof withdrawal.$inferSelect;
