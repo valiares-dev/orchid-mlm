@@ -3,4 +3,5 @@ packages:
   - "packages/*"
 allowBuilds:
   '@parcel/watcher': false
+  bcrypt: true
   esbuild: false

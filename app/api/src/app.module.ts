@@ -3,6 +3,9 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './v1/auth/auth.module'
+import { DbModule } from './db/db.module';
+import { AuthenticationModule } from '@nestjs/authentication';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -18,8 +21,15 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     }),
     ConfigModule.forRoot({
       isGlobal: true
-    })
-
+    }),
+    AuthenticationModule.forRoot({
+      session: {
+        absoluteTtl: '5d',
+        idleTtl: '3d'
+      }
+    }),
+    AuthModule,
+    DbModule,
   ],
   controllers: [AppController],
   providers: [AppService],

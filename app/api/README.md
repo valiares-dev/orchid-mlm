@@ -63,3 +63,12 @@ Or do it by hand: create an application and an API key at [observe.nestjs.com](h
 
 The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
 
+## Drizzle Kit Changes - (18 - 11 - 26)
+- Use this command if you encounter this following scenario:
+1. Creating schema from the start
+2. Applying changes to the specific schema
+3. Adding a new schema on the existing setup
+
+$ pnpm drizzle-kit generate
+$ pnpm drizzle-kit migrate
+

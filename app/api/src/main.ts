@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { VersioningType, ValidationPipe } from '@nestjs/common';
 import { AppModule, ObserveInstrument } from './app.module';
 
 async function bootstrap() {
@@ -7,7 +8,20 @@ async function bootstrap() {
   });
 
   app.enableCors();
-  app.setGlobalPrefix('api'); // endpoint prefix 
+  app.setGlobalPrefix('api'); // endpoint prefix
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    })
+  )
+
+  // app versioning - redirections to version 1 api 
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  })
 
   const port = process.env.PORT ?? 3001
 
