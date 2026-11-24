@@ -8,6 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:web": "pnpm --filter ./app/web dev",
     "dev:api": "pnpm --filter ./app/api start",
+    "db:studio": "pnpm --filter ./app/api db:studio",
+    "dev:backend": "run-p dev:api db:studio",
     "dev": "run-p dev:web dev:api"
   },
   "keywords": [],

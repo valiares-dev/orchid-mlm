@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './v1/auth/auth.module'
 import { DbModule } from './db/db.module';
 import { AuthenticationModule } from '@nestjs/authentication';
+import { AuthorizationModule } from '@nestjs/authorization';
+import { ReferralCodesModule } from './v1/referral-codes/referral-codes.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -28,8 +30,10 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
         idleTtl: '3d'
       }
     }),
+    AuthorizationModule.forRoot(),
     AuthModule,
     DbModule,
+    ReferralCodesModule
   ],
   controllers: [AppController],
   providers: [AppService],
