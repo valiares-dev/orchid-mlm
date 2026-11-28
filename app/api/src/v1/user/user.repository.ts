@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectDrizzle } from "@nestjs/drizzle";
 import { eq } from "drizzle-orm";
-import type { Database } from "../../db/database";
+import type { Database, DbExecutor } from "../../db/database";
 import { users } from "../../db/schema";
 import type { AuthUser } from "./user";
 
@@ -22,6 +22,7 @@ export interface CreateUserInput {
   passwordHash: string;
   phone?: string;
   sponsorId?: string;
+  accountStatus: 'INACTIVE' | 'ACTIVE_DEDUCTION' | 'ACTIVE_FULL';
 }
 
 const normalizeEmail = (email: string) => email.trim().normalize('NFC').toLowerCase();
@@ -51,15 +52,16 @@ export class UserRepository {
     return { user, passwordHash };
   }
 
-  async create(input: CreateUserInput): Promise<AuthUser> {
+  async create(input: CreateUserInput, executor: DbExecutor) {
     try {
-      const [row] = await this.db.insert(users).values({
+      const [row] = await executor.insert(users).values({
         username: input.username.trim(),
         email: normalizeEmail(input.email),
         password_hash: input.passwordHash,
         phone: input.phone,
         sponsor_id: input.sponsorId,
-        terms_accepted_at: new Date()
+        terms_accepted_at: new Date(),
+        account_status: input.accountStatus
       })
         .returning(safeColumns);
 

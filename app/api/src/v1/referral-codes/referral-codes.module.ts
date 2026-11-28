@@ -7,5 +7,6 @@ import { ReferralCodePolicy } from './referral-codes.policy';
 @Module({
   controllers: [ReferralCodesController],
   providers: [ReferralCodesService, ReferralCodesRepository, ReferralCodePolicy],
+  exports: [ReferralCodesRepository]
 })
 export class ReferralCodesModule { }
