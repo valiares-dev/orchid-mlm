@@ -12,6 +12,7 @@ export class AuthService {
     private readonly passwordHasher: PasswordHasher,
   ) { }
 
+  // TODO: Check code status then apply the account status as well
   async register(dto: RegisterDTO): Promise<AuthUser> {
     if (await this.userRepository.findByEmail(dto.email)) {
       throw new ConflictException('Email already registered');

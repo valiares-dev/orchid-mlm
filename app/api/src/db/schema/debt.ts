@@ -12,7 +12,7 @@ export const debt = pgTable('debt', {
   id: uuid('id').defaultRandom().primaryKey(),
   debtor_id: uuid('debtor_id').notNull().unique().references(() => users.id),
   creditor_id: uuid('creditor_id').notNull().references(() => users.id),
-  order_id: uuid('order_id').notNull().references(() => orders.id), // TODO: Add the order id as references
+  order_id: uuid('order_id').notNull().references(() => orders.id),
   principal: numeric('principal', { precision: 12, scale: 2 }).notNull(),
   amount_paid: numeric('amount_paid', { precision: 12, scale: 2 }).notNull().default('0'),
   deduction_rate: smallint('deduction_rate').notNull().default(20),

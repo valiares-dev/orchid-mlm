@@ -1,3 +1,4 @@
+import type { UserStatus } from '@orchid-mlm/types';
 import { IsEmail, IsNotEmpty, IsString, IsBoolean, Equals, MinLength, IsOptional } from 'class-validator';
 
 export class RegisterDTO {
@@ -18,6 +19,10 @@ export class RegisterDTO {
   @IsBoolean()
   @Equals(true, { message: 'You must accept the terms and policy' })
   termsAccepted!: boolean;
+
+  @IsOptional()
+  @IsString()
+  accountStatus!: UserStatus;
 
   @IsOptional()
   @IsString()

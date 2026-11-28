@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectDrizzle } from "@nestjs/drizzle";
-import { eq, and, like } from "drizzle-orm";
+import { eq, and, like, getTableColumns, or, ilike } from "drizzle-orm";
 import type { Database, DbExecutor } from "../../db/database";
-import { NewReferralCode, referral_code, referral_codes_uses } from "../../db/schema";
+import { NewReferralCode, referral_code, referral_codes_uses, User, users } from "../../db/schema";
 import { randomBytes } from "crypto";
 import { CreateReferralCodeDto } from "./dto/create-referral-code.dto";
 
@@ -45,7 +45,8 @@ export class ReferralCodesRepository {
     return row ?? null;
   }
 
-  async createSystemCode(userId: string) {
+  // TODO: Create Service and Controller
+  async createSystemCode(userId: string, executor: DbExecutor) {
     const types = ['SYSTEM'] as const;
 
     const row: NewReferralCode[] = types.map((type) => ({
@@ -63,15 +64,18 @@ export class ReferralCodesRepository {
   }
 
   // TODO: Controller name findCodeByOwner
-  async findCodeByOwner(code: string) {
-    return this.db.select().from(referral_code).where(like(referral_code.code, code));
+  async findCodeByOwner(search: string) {
+    const pattern = `%${search}%`
+    return this.db.select(getTableColumns(referral_code))
+      .from(referral_code)
+      .innerJoin(users, eq(referral_code.issued_by, users.id))
+      .where(or(ilike(users.username, pattern), ilike(users.email, pattern)));
   }
 
   async findCodeById(codeId: string) {
     return this.db.select().from(referral_code).where(eq(referral_code.id, codeId));
   }
 
-  // TODO: Admin & Dev control
   async revokeCode(codeId: string) {
     const rows = await this.db.update(referral_code)
       .set({
@@ -83,7 +87,6 @@ export class ReferralCodesRepository {
     return rows.length > 0;
   }
 
-  // TODO: Create A controller for this
   async createCode(dto: CreateReferralCodeDto, executor: DbExecutor) {
     const [row] = await executor.insert(referral_code).values({
       code: dto.code,
@@ -94,6 +97,13 @@ export class ReferralCodesRepository {
       type: referral_code.type,
       issued_by: referral_code.issued_by
     })
+
+    return row ?? null;
+  }
+
+  // TODO: Able to delete codes (and admin dev only)
+  async deleteCode(codeId: string, executor: DbExecutor) {
+    const [row] = await executor.delete(referral_code).where(eq(referral_code.id, codeId)).returning()
 
     return row ?? null;
   }

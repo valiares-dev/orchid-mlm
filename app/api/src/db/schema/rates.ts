@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm";
 
 // level rates table 
 export const level_rates = pgTable('level_rates', {
-  level: smallint('level').primaryKey(),// TODO: add check between 1 - 5
+  level: smallint('level').primaryKey(),
   amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 }, (table) => [
